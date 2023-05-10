@@ -1,19 +1,35 @@
 package Handle1;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.Set;
+
 
 public class Text {
-    public static void main(String[] args) throws ClassNotFoundException, IOException {
+
+    public static void m(int i, String... args) {
+        for (int j = 0; j < args.length; j++) {
+            System.out.println(args[j]);
+        }
+    }
+    public static void main(String[] args) throws ClassNotFoundException, IOException, InstantiationException,
+            IllegalAccessException, NoSuchFieldException, SecurityException {
 
         // 玩一下获取Class对象的三种方式
         // 1.Class类中的forName方法
@@ -159,7 +175,6 @@ public class Text {
         //     // private String = name
         // }
 
-        
         // 两个线程交叉打印奇偶数
         // Man m = new Man();
         // Thread t1 = new Thread(new A(m),"t1");
@@ -167,10 +182,8 @@ public class Text {
         // t1.start();
         // t2.start();
 
-
-
         /**
-         * 通过类加载器获取文件的具体的地址，这个地址可以配合IO流。如果是连接.propeities文件就用资源管理器.
+         * 通过类加载器获取文件的具体的地址，这个地址可以配合IO流。如果是连接.propeities文件就用资源管理*器.
          */
         // 这个IO流指向了girl这个文件
         // InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("girl.properties");
@@ -184,7 +197,78 @@ public class Text {
 
         // // 养成好习惯，用完流之后，就关一下
         // stream.close();
-        
-        // 
+
+        // // 资源管理器（ResoureBundle）
+        // System.out.println(ResourceBundle.getBundle("girl").getString("1"));
+
+        // System.out.println(ResourceBundle.getBundle("girl").getString("2"));
+
+        // 自带缓存的流（以后读取.txt文件首选这个）
+        // BufferedReader reader = new BufferedReader(new FileReader("src/example1.properties"));
+        // System.out.println(reader.readLine());
+        // reader.close();
+
+        /**
+         * 写一个开发日记
+         */
+
+        // PrintStream console = System.out;
+        // System.setOut(new PrintStream(new FileOutputStream()));
+
+        /**
+         * 通过反射机制获取文件的地址
+         */
+        // String path = Thread.currentThread().getContextClassLoader().getResource("girl.properties").getPath();
+        // System.out.println(path);
+        // File file = new File("E:/JAVAPROJECT/HandleClsss/bin/girl.properties");
+        // System.out.println(file.exists());
+
+        /**
+         * 通过类加载器（ClassLoad）这个类去拿到文件的地址
+         */
+        // InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("girl.properties");
+        // // 通过inputstream把数据导入Properties
+        // Properties p = new Properties();
+        // p.load(in);
+        // // 怎么循环遍历Properties ————使用entrySet方法
+        // // Set<Map.Enery<Interter, String>> set = p.entrySet();
+        // Set<Map.Entry<Object, Object>> set = p.entrySet();
+        // for (Map.Entry<Object,Object> entry : set) {
+        //     System.out.println(entry);
+        // }
+
+        /**
+         * 为啥不直接new对象，然后对象.属性？
+         * 反射机制很灵活，后期的框架底层代码全靠他。
+         */
+        // Class<?> man = Class.forName("Handle1.Man");
+        // // 这里的newInstance方法就是通过.class文件到.java文件的过程
+        // Object manObject = man.newInstance();
+
+        // // 获取man里面的age属性(如果是私有的属性，请记得用setAccessiable获得权限)
+        // Field age = man.getDeclaredField("age");
+        // age.setAccessible(true);
+        // // 读写属性
+        // age.set(manObject, 16);
+        // System.out.println(age.get(manObject));
+
+        /**
+         * 可变长参数
+         * 1.引用...(必须是三点) 2.必须是参数列表的最后一位
+         * 3.底层貌似是个数组,有lenth这个属性
+         */
+        // Text.m(1, "a","b","c","d","kzx");
+
+
+        /**
+         * 通过反射方法反射出.class文件中的方法
+         */
+        Class<?> myclass = Class.forName("Handle1.Man");
+
+        Method arrMethod[] = myclass.getDeclaredMethods();
+        for (Method method : arrMethod) {
+            // 获取修饰符
+            System.out.println();
+        }
     }
 }
