@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -29,7 +30,7 @@ public class Text {
         }
     }
     public static void main(String[] args) throws ClassNotFoundException, IOException, InstantiationException,
-            IllegalAccessException, NoSuchFieldException, SecurityException {
+            IllegalAccessException, NoSuchFieldException, SecurityException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException {
 
         // 玩一下获取Class对象的三种方式
         // 1.Class类中的forName方法
@@ -259,16 +260,46 @@ public class Text {
          */
         // Text.m(1, "a","b","c","d","kzx");
 
-
+        // https://github.com/double0seven1/Java.git
         /**
          * 通过反射方法反射出.class文件中的方法
          */
-        Class<?> myclass = Class.forName("Handle1.Man");
+        // Class<?> myclass = Class.forName("Handle1.Man");
 
-        Method arrMethod[] = myclass.getDeclaredMethods();
-        for (Method method : arrMethod) {
-            // 获取修饰符
-            System.out.println();
-        }
+        // Method arrMethod[] = myclass.getDeclaredMethods();
+        // for (Method method : arrMethod) {
+        //     // 获取修饰符
+        //     System.out.print(Modifier.toString(method.getModifiers()) + " ");
+        //     // 获取返回类型
+        //     System.out.print(method.getReturnType().getSimpleName() + " ");
+        //     // 获取方法的名字
+        //     System.out.print(method.getName() + " ");
+        //     // 获取方法的参数
+        //     Class<?> parameter[] = method.getParameterTypes();
+        //     for (Class<?> method2 : parameter) {
+        //         System.out.print(method2.getSimpleName() + " ");
+        //     }
+        //     System.out.println(" ");
+        // }
+
+        
+        /**
+         * 通过反射机制去调用方法
+         */
+        // 先用指针指向.class文件
+        Class<?> myclass = Class.forName("Handle1.Man");
+        // 通过反射，在堆区反射出一个obj0
+        Object obj0 = myclass.newInstance();
+        
+        // 创建method指针指向了.class文件里面的login方法.
+        Method method = myclass.getDeclaredMethod("login", String.class, String.class);
+
+        // 调用方法
+        Object obj1 = method.invoke(obj0, "1234", "lzm");
+
+        System.out.println(obj1);
+  
+
+
     }
 }
